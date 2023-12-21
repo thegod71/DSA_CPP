@@ -20,7 +20,7 @@ class kqueue{
              next[n-1]=-1;
         } 
     }
-    bool push(int x,int q){
+bool push(int x,int q){
 if(freespace==-1){
     return false;
 }
@@ -29,6 +29,10 @@ freespace=next[index];
 if(front[q]==-1){
     front[q]=index;
 }
+ if(q>k-1){
+    cout<<"queue is not present";
+    return false ;
+}   
 else{
     next[rear[q]]=index;
 }
@@ -41,6 +45,10 @@ int pop(int q){
     if(front[q]==-1){
         return -1;
     }
+    if(q>k-1){
+    cout<<"queue is not present";
+    return -1 ;
+}
     int index=front[q];
     front[q]=next[index];
     next[index]=freespace;
