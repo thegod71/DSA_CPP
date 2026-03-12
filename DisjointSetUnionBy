@@ -1,0 +1,48 @@
+
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+class Disjoint{
+    vector<int>rank,parent;
+    public:
+    Disjoint(int n){
+        rank.resize(n+1,0);// 1 based indexing 
+        parent.resize(n+1);
+        for(int i=0;i<=n;i++){
+            parent[i]=i;// intially 
+        }
+    }
+    int findUParent(int node){
+        // to find Ultimate Parent and also path compression
+        if(node==parent[node]) return node;
+        return parent[node]=findUParent(parent[node]);
+    }
+    void UnionByRank(int u,int v){
+        int ulp_u=findUParent(u);
+        int ulp_v=findUParent(v);
+        if(ulp_u==ulp_v)return;// same component
+        if(rank[ulp_u]  < rank[ulp_v]){
+            parent[ulp_u]=ulp_v;
+        }
+        else if(rank[ulp_u] > rank[ulp_v]){
+            parent[ulp_v]=ulp_u;
+        }
+        else {
+            parent[ulp_u]=ulp_v;
+            rank[ulp_v]++;
+        }
+    }
+};
+int main() {
+    // Write C++ code here
+    Disjoint D(8);
+    D.UnionByRank(1,2);
+    D.UnionByRank(2,3);
+    D.UnionByRank(4,5);
+    D.UnionByRank(6,7);
+    if(D.findUParent(3)==D.findUParent(7))cout<<"same";
+    D.UnionByRank(4,6);
+    D.UnionByRank(4,2);  
+    if(D.findUParent(3)==D.findUParent(7))cout<<"same";
+    return 0;
+}
