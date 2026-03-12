@@ -1,0 +1,49 @@
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+class Disjoint{
+    vector<int>Size,parent;
+    public:
+    Disjoint(int n){
+        Size.resize(n+1,1);// 1 based indexing 
+        parent.resize(n+1);
+        for(int i=0;i<=n;i++){
+            parent[i]=i;// intially 
+        }
+    }
+    int findUParent(int node){
+        // to find Ultimate Parent and also path compression
+        if(node==parent[node]) return node;
+        return parent[node]=findUParent(parent[node]);
+    }
+    void UnionBySize(int u,int v){
+        int ulp_u=findUParent(u);
+        int ulp_v=findUParent(v);
+        if(ulp_u==ulp_v)return;// same component
+        if(Size[ulp_u]  < Size[ulp_v]){
+            parent[ulp_u]=ulp_v;
+            Size[ulp_v]+=Size[ulp_u];
+        }
+        else if(Size[ulp_u] > Size[ulp_v]){
+            parent[ulp_v]=ulp_u;
+            Size[ulp_u]+=Size[ulp_v];
+        }
+        else {
+            parent[ulp_u]=ulp_v;
+            Size[ulp_v]++;
+        }
+    }
+};
+int main() {
+    // Write C++ code here
+    Disjoint D(8);
+    D.UnionBySize(1,2);
+    D.UnionBySize(2,3);
+    D.UnionBySize(4,5);
+    D.UnionBySize(6,7);
+    if(D.findUParent(3)==D.findUParent(7))cout<<"same";
+    D.UnionBySize(4,6);
+    D.UnionBySize(4,2);  
+    if(D.findUParent(3)==D.findUParent(7))cout<<"same";
+    return 0;
+}
